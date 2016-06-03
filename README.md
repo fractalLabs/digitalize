@@ -29,7 +29,7 @@ Which can be any collection:
 
 You can use `:clean-numbers false` to avoid attempting to parse numeric strings as numbers.
 
-And `:clean-keys` to avoid attempting to convert map keys that are strings as keywords.
+And `:clean-keys false` to avoid attempting to convert map keys that are strings as keywords.
 
 ## License
 
