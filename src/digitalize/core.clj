@@ -2,11 +2,6 @@
   (:use clojure.set)
   (:require [clojure.string :as s]))
 
-(defn vec-o-seq?
-  "Is this either a vector or seq?"
-  [o]
-  (or (vector? o) (seq? o)))
-
 (defn category
   "Category of the objects type"
   [o]
