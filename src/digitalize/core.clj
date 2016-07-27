@@ -98,16 +98,18 @@
   (try (int x)
        (catch Exception e 0)))
 
+(defn simplify-int [x]
+  (let [i (int x)]
+    (if (== x i)
+      i
+      x)))
+
 (defn str->number
   "Cast to number. Tries to be permissive:
   supports whitespace at the beginning or end
   and commas"
   [s]
-  (let [x (Double/valueOf (s/replace s "," ""))
-        n (try-int x)]
-    (if (== x n)
-        n
-        x)))
+  (simplify-int (Double/valueOf (s/replace s "," ""))))
 
 (defn digitalize
   "Remove nils and empty stuff,
@@ -136,5 +138,8 @@
                                             s)
                            (empty? s) nil
                           :else s))
+               :number (if clean-numbers
+                         (simplify-int o)
+                         o)
                o)]
     (remove-nils data)))
