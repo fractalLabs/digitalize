@@ -73,8 +73,8 @@
     (str o)
     (name o)))
 
-(defn standard-keyword
-  "Convert a string to a more idiomatic keyword"
+(defn standard-name
+  "Make a string more idiomatic"
   [o]
   (let [k (trim-dashes
             (str-replace (merge chars-to-dash
@@ -82,7 +82,12 @@
                                 acentos)
                     (s/lower-case
                      (safe-name o))))]
-    (keyword k)))
+    k))
+
+(defn standard-keyword
+  "Convert a string to a more idiomatic keyword"
+  [o]
+  (keyword (standard-name)))
 
 ;TODO: doesnt cover cases like .9
 (defn snumber?
