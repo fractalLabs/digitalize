@@ -87,7 +87,7 @@
 (defn standard-keyword
   "Convert a string to a more idiomatic keyword"
   [o]
-  (keyword (standard-name)))
+  (keyword (standard-name o)))
 
 ;TODO: doesnt cover cases like .9
 (defn snumber?
