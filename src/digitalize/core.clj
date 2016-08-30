@@ -43,7 +43,7 @@
 
 (def chars-to-dash
   "List of chars to convert to dashes"
-  (zipmap (map str "!@$%^&*()_+?/- #,")
+  (zipmap (map str "!@$%^&*()_+?/- #,.")
                  (repeat "-")))
 
 (def standard-keys
