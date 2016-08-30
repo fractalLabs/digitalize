@@ -49,7 +49,17 @@
 (def standard-keys
   "Lat long names in spanish"
   {"latitud" "latitude",
-  "longitud" "longitude"})
+   "longitud" "longitude"
+   "ano" "fecha"})
+
+(defn change-standard-keys
+  [s]
+  (loop [les-keys standard-keys]
+    (if (empty? les-keys)
+      s
+      (if (= (ffirst les-keys) s)
+        (second (first les-keys))
+        (recur (rest les-keys))))))
 
 (def acentos
   "Non standard characters to convert"
@@ -76,12 +86,12 @@
 (defn standard-name
   "Make a string more idiomatic"
   [o]
-  (let [k (trim-dashes
-            (str-replace (merge chars-to-dash
-                                standard-keys
-                                acentos)
-                    (s/lower-case
-                     (safe-name o))))]
+  (let [k (change-standard-keys (trim-dashes
+                                 (str-replace (merge chars-to-dash
+                                                     ;standard-keys
+                                                     acentos)
+                                              (s/lower-case
+                                               (safe-name o)))))]
     k))
 
 (defn standard-keyword
