@@ -50,7 +50,8 @@
   "Lat long names in spanish"
   {"latitud" "latitude",
    "longitud" "longitude"
-   "ano" "fecha"})
+   "ano" "fecha"
+   "anio" "fecha"})
 
 (defn change-standard-keys
   [s]
