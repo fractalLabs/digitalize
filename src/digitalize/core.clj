@@ -43,7 +43,7 @@
 
 (def chars-to-dash
   "List of chars to convert to dashes"
-  (zipmap (map str "!@$%^&*()_+?/- #,.")
+  (zipmap (map str "!@$%^\\&*()_+?/- #,.")
                  (repeat "-")))
 
 (def standard-keys
@@ -158,3 +158,12 @@
                     o)]
          (remove-nils data))
        (catch Exception e o)))
+
+(defn keys-replacer
+  [o newks]
+  (if (map? (first o))
+    (map #(zipmap (keys-replacer (keys %) newks)
+                  (vals %))
+         o)
+    (map #(get newks % %)
+         o)))
