@@ -42,9 +42,8 @@
      "")))
 
 (def chars-to-dash
-  "List of chars to convert to dashes"
-  (zipmap (map str "!@$%^\\&*()_+?/- #,.:")
-                 (repeat "-")))
+  "Convert non alphanumerical chars to dashes"
+  {#"[^0-9a-zA-Z]" "-"})
 
 (def standard-keys
   "Lat long names in spanish"
@@ -92,9 +91,10 @@
   "Make a string more idiomatic"
   [o]
   (let [k (change-standard-keys (trim-dashes
-                                 (str-replace (merge chars-to-dash
+                                 (str-replace (merge acentos
+                                                     chars-to-dash
                                                      ;standard-keys
-                                                     acentos)
+                                                    )
                                               (s/lower-case
                                                (safe-name o)))))]
     k))
