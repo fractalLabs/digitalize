@@ -43,7 +43,7 @@
 
 (def chars-to-dash
   "List of chars to convert to dashes"
-  (zipmap (map str "!@$%^\\&*()_+?/- #,.")
+  (zipmap (map str "!@$%^\\&*()_+?/- #,.:")
                  (repeat "-")))
 
 (def standard-keys
@@ -51,7 +51,11 @@
   {"latitud" "latitude",
    "longitud" "longitude"
    "ano" "fecha"
-   "anio" "fecha"})
+   "anio" "fecha"
+   "etiqueta" "variable"
+   "nombre-variable" "variable"
+   "descripcion-variable" "descripcion"
+   })
 
 (defn change-standard-keys
   [s]
