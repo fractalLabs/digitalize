@@ -1,6 +1,8 @@
 (ns digitalize.core
   (:use clojure.set)
-  (:require [clojure.string :as s]))
+  (:require [clojure.string :as s]
+            [digitalize.numbers :refer :all]
+            [digitalize.strings :refer :all]))
 
 (defn category
   "Category of the objects type"
@@ -26,115 +28,12 @@
                         {k v}))
     o))
 
-(defn- single-dashes
-  "If a string contains consecutive dashes, leave just one"
-  [s]
-  (s/replace s #"[-]+" "-"))
-
-(defn trim-dashes
-  "Like clojure.string/trim but for dashes at the
-  beginning or end"
-  [s]
-  (single-dashes
-    (s/replace
-     (s/replace s #"^-*" "")
-     #"-*$"
-     "")))
-
-(def chars-to-dash
-  "Convert non alphanumerical chars to dashes"
-  {#"[^0-9a-zA-Z]" "-"})
-
-(def standard-keys
-  "Lat long names in spanish"
-  {"latitud" "latitude",
-   "longitud" "longitude"
-   "ano" "fecha"
-   "anio" "fecha"
-   "etiqueta" "variable"
-   "nombre-variable" "variable"
-   "descripcion-variable" "descripcion"
-   })
-
-(defn change-standard-keys
-  [s]
-  (loop [les-keys standard-keys]
-    (if (empty? les-keys)
-      s
-      (if (= (ffirst les-keys) s)
-        (second (first les-keys))
-        (recur (rest les-keys))))))
-
-(def acentos
-  "Non standard characters to convert"
-  {"á" "a", "é" "e", "í" "i", "ó" "o", "ú" "u", "ñ" "n"})
-
-(defn str-replace
-  "like clojure.string/replace but takes a map of replacements"
-  [replacements-map s]
-  (loop [v (vec replacements-map) s s]
-    (if (empty? v)
-      s
-      (recur (rest v)
-             (s/replace s
-                        (ffirst v)
-                        (second (first v)))))))
-
-(defn safe-name
-  "like name but will also cast numbers"
-  [o]
-  (if (number? o)
-    (str o)
-    (name o)))
-
-(defn standard-name
-  "Make a string more idiomatic"
-  [o]
-  (let [k (change-standard-keys (trim-dashes
-                                 (str-replace (merge acentos
-                                                     chars-to-dash
-                                                     ;standard-keys
-                                                    )
-                                              (s/lower-case
-                                               (safe-name o)))))]
-    k))
-
-(defn standard-keyword
-  "Convert a string to a more idiomatic keyword"
-  [o]
-  (keyword (standard-name o)))
-
-;TODO: doesnt cover cases like .9
-(defn snumber?
-  "Does this string look like a number?"
-  [o]
-  (= o (first (re-find #"[\-]?[$]?[0-9,]+(\.[0-9]*)?" o))))
-
-(defn try-int
-  "Try to coerce to int, return 0 on exception"
-  [x]
-  (try (int x)
-       (catch Exception e 0)))
-
-(defn simplify-int [x]
-  (let [i (int x)]
-    (if (== x i)
-      i
-      x)))
-
-(defn str->number
-  "Cast to number. Tries to be permissive:
-  supports whitespace at the beginning or end
-  and commas"
-  [s]
-  (simplify-int (Double/valueOf (s/replace (s/replace s "," "") "$" ""))))
-
 (defn digitalize
   "Remove nils and empty stuff,
   Make map keys more idiomatic and parse numbers"
   [o & {:keys [clean-keys clean-numbers]
-        :or {clean-keys true,
-             clean-numbers true}}]
+        :or   {clean-keys true,
+               clean-numbers true}}]
   (try (let [data (case (category o)
                     :coll (if-not (empty? o)
                             (map #(digitalize % :clean-keys clean-keys
