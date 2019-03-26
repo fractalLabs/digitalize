@@ -108,7 +108,7 @@
 (defn snumber?
   "Does this string look like a number?"
   [o]
-  (= o (first (re-find #"[\-]?[0-9,]+(\.[0-9]*)?" o))))
+  (= o (first (re-find #"[\-]?[$]?[0-9,]+(\.[0-9]*)?" o))))
 
 (defn try-int
   "Try to coerce to int, return 0 on exception"
@@ -127,7 +127,7 @@
   supports whitespace at the beginning or end
   and commas"
   [s]
-  (simplify-int (Double/valueOf (s/replace s "," ""))))
+  (simplify-int (Double/valueOf (s/replace (s/replace s "," "") "$" ""))))
 
 (defn digitalize
   "Remove nils and empty stuff,
