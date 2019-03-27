@@ -83,6 +83,6 @@
   (keyword (standard-name o)))
 
 (defn standarize-vals [maps ks]
-  (map #(merge % (zipmap ks (map (fn [v] (standard-name (v %)))
+  (map #(merge % (zipmap ks (map (fn [v] (standard-name (% v)))
                                  ks)))
        maps))
