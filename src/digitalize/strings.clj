@@ -61,7 +61,9 @@
   [o]
   (if (number? o)
     (str o)
-    (name o)))
+    (if (nil? o)
+      ""
+      (name o))))
 
 (defn standard-name
   "Make a string more idiomatic"
