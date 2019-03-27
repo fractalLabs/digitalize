@@ -79,3 +79,8 @@
   "Convert a string to a more idiomatic keyword"
   [o]
   (keyword (standard-name o)))
+
+(defn standarize-vals [maps ks]
+  (map #(merge % (zipmap ks (map (fn [v] (standard-name (v %)))
+                                 ks)))
+       maps))
