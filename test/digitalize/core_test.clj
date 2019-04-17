@@ -1,6 +1,9 @@
 (ns digitalize.core-test
   (:require [clojure.test :refer :all]
-            [digitalize.core :refer :all]))
+            [digitalize
+             [core :refer :all]
+             [numbers :refer :all]
+             [strings :refer :all]]))
 
 (deftest digitalize-works
   (testing "testing digitalize"
