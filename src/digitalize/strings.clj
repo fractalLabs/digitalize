@@ -23,12 +23,12 @@
 
 (def standard-keys
   "Lat long names in spanish"
-  {"latitud" "latitude",
-   "longitud" "longitude"
-   "ano" "fecha"
-   "anio" "fecha"
-   "etiqueta" "variable"
-   "nombre-variable" "variable"
+  {"latitud"              "latitude"
+   "longitud"             "longitude"
+   "ano"                  "fecha"
+   "anio"                 "fecha"
+   "etiqueta"             "variable"
+   "nombre-variable"      "variable"
    "descripcion-variable" "descripcion"
    })
 
@@ -41,7 +41,7 @@
         (second (first les-keys))
         (recur (rest les-keys))))))
 
-(def acentos
+(def accents
   "Non standard characters to convert"
   {"á" "a", "é" "e", "í" "i", "ó" "o", "ú" "u", "ñ" "n"})
 
@@ -67,20 +67,23 @@
 
 (defn standard-name
   "Make a string more idiomatic"
-  [o]
-  (let [k (change-standard-keys (trim-dashes
-                                 (str-replace (merge acentos
-                                                     chars-to-dash
-                                                     ;standard-keys
-                                                    )
-                                              (str/lower-case
-                                               (safe-name o)))))]
-    k))
+  ([o] (standard-name o {}))
+  ([o replacements]
+  (let [k (change-standard-keys
+           (trim-dashes
+            (str-replace (merge accents
+                                chars-to-dash
+                                ;standard-keys
+                                replacements)
+                         (str/lower-case
+                          (safe-name o)))))]
+    k)))
 
 (defn standard-keyword
   "Convert a string to a more idiomatic keyword"
-  [o]
-  (keyword (standard-name o)))
+  ([o] (standard-keyword {}))
+  ([o replacements]
+  (keyword (standard-name o replacements))))
 
 (defn standarize-vals [maps ks]
   (map #(merge % (zipmap ks (map (fn [v] (standard-name (% v)))
