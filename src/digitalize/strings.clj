@@ -81,7 +81,7 @@
 
 (defn standard-keyword
   "Convert a string to a more idiomatic keyword"
-  ([o] (standard-keyword {}))
+  ([o] (standard-keyword o {}))
   ([o replacements]
   (keyword (standard-name o replacements))))
 
