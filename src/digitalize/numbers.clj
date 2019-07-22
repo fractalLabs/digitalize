@@ -49,25 +49,26 @@
    (Double/valueOf (str/replace (str/replace s "," "") "$" ""))))
 
 (defn is-any-substring? [s & substrings]
-  (loop [s s substrings substrings res false]
+  (loop [substrings substrings res false]
     (if (empty? substrings)
       res
-      (recur s (rest substrings) (or res (true? (str/last-index-of s (first substrings))))))))
+      (recur (rest substrings)
+             (or res (str/last-index-of s (first substrings)))))))
 
-(defn gently-coerce [s]
+(defn gently-coerce
+  "Gently coerce a string into numbers"
+  [s]
   (try
-    (let [re (re-numbers (str-remove-numberformat s))
-          stdr (standard-name s)
-          usd? (is-any-substring? stdr "usd" "dolar")
-          millon? (is-any-substring? stdr "millon")
-          mil? (is-any-substring? (str-remove stdr "millon"))
-          multiplier (* (if usd? 20 1)
-                        (if millon? 1000000 1)
+    (let [re         (re-numbers (str-remove-numberformat s))
+          stdr       (standard-name s)
+          millon?    (is-any-substring? stdr "millon")
+          mil?       (is-any-substring? (str-remove stdr "millon") "mil")
+          multiplier (* (if millon? 1000000 1)
                         (if mil? 1000 1))]
       (case (count re)
         0 nil
         1 (* multiplier (str->number (first re)))
-        nil))
+        (map gently-coerce re)))
     (catch Exception e)))
 
 (defn gently-coerce-nums [maps k]
